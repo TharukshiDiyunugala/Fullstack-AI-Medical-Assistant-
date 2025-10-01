@@ -50,7 +50,7 @@ This will tell you exactly what's wrong.
 Replace the placeholders in your connection string:
 
 ```env
-MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/medical-assistant?retryWrites=true&w=majority
+
 ```
 
 Replace:
