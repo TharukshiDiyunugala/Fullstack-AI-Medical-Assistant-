@@ -39,18 +39,12 @@ export default function SignInPage() {
           throw new Error(data.error || "Registration failed")
         }
 
-        // Auto sign in after registration
-        const result = await signIn("credentials", {
-          email: formData.email,
-          password: formData.password,
-          redirect: false,
-        })
-
-        if (result?.error) {
-          setError(result.error)
-        } else {
-          router.push(callbackUrl)
-        }
+        // Switch to sign-in form after successful registration
+        setIsSignUp(false)
+        setFormData({ name: "", email: "", password: "" })
+        setError("")
+        // Show success message
+        alert("Account created successfully! Please sign in.")
       } else {
         // Sign in existing user
         const result = await signIn("credentials", {

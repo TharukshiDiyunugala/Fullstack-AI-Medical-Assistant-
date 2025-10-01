@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import UserInfo from "@/components/auth/UserInfo"
+import Link from "next/link"
 
 export default async function DashboardPage() {
   const session = await auth()
@@ -32,9 +33,9 @@ export default async function DashboardPage() {
               <p className="text-gray-600 mb-4">
                 Chat with our AI assistant for health-related queries
               </p>
-              <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <Link href="/chat" className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-center">
                 Start Chat
-              </button>
+              </Link>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md">
