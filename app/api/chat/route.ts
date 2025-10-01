@@ -54,14 +54,14 @@ User's current question: ${message}
 
 Provide a helpful, informative response:`
 
-    // Try multiple model names as fallback
+    // Try multiple model names as fallback (using latest available models)
     const modelNames = [
-      "gemini-1.5-flash-latest",
-      "gemini-1.5-pro-latest", 
-      "gemini-1.5-flash",
-      "gemini-1.5-pro",
-      "gemini-pro",
-      "gemini-1.0-pro"
+      "gemini-2.5-flash",           // Latest stable flash model
+      "gemini-2.0-flash",           // Gemini 2.0 flash
+      "gemini-flash-latest",        // Generic latest flash
+      "gemini-2.5-pro",             // Latest pro model
+      "gemini-pro-latest",          // Generic latest pro
+      "gemini-2.0-flash-exp"        // Experimental fallback
     ]
     
     let result, response, text
