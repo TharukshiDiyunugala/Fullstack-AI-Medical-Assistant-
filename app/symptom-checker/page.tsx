@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
 import { redirect } from "next/navigation"
 import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
+import { FaStethoscope, FaHome, FaHistory, FaPlus, FaTrash, FaExclamationTriangle, FaCheckCircle, FaHospital, FaLightbulb, FaHeartbeat } from "react-icons/fa"
 
 interface Symptom {
   name: string
@@ -34,14 +36,12 @@ export default function SymptomCheckerPage() {
   const [history, setHistory] = useState<any[]>([])
   const [showHistory, setShowHistory] = useState(false)
 
-  // Redirect if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
       redirect("/auth/signin?callbackUrl=/symptom-checker")
     }
   }, [status])
 
-  // Load history
   useEffect(() => {
     if (status === "authenticated") {
       loadHistory()
@@ -62,16 +62,7 @@ export default function SymptomCheckerPage() {
 
   const addSymptom = () => {
     if (!currentSymptom.trim() || !currentDuration.trim()) return
-
-    setSymptoms([
-      ...symptoms,
-      {
-        name: currentSymptom.trim(),
-        severity: currentSeverity,
-        duration: currentDuration.trim(),
-      },
-    ])
-
+    setSymptoms([...symptoms, { name: currentSymptom.trim(), severity: currentSeverity, duration: currentDuration.trim() }])
     setCurrentSymptom("")
     setCurrentDuration("")
     setCurrentSeverity("mild")
@@ -83,7 +74,6 @@ export default function SymptomCheckerPage() {
 
   const analyzeSymptoms = async () => {
     if (symptoms.length === 0) return
-
     setIsAnalyzing(true)
     setAnalysis(null)
 
@@ -100,11 +90,7 @@ export default function SymptomCheckerPage() {
       })
 
       const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to analyze symptoms")
-      }
-
+      if (!response.ok) throw new Error(data.error || "Failed to analyze symptoms")
       setAnalysis(data.analysis)
       loadHistory()
     } catch (error: any) {
@@ -128,148 +114,198 @@ export default function SymptomCheckerPage() {
 
   const getUrgencyColor = (level: string) => {
     switch (level) {
-      case "low":
-        return "bg-green-100 text-green-800 border-green-300"
-      case "medium":
-        return "bg-yellow-100 text-yellow-800 border-yellow-300"
-      case "high":
-        return "bg-orange-100 text-orange-800 border-orange-300"
-      case "emergency":
-        return "bg-red-100 text-red-800 border-red-300"
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-300"
+      case "low": return "bg-green-100 text-green-800 border-green-300"
+      case "medium": return "bg-yellow-100 text-yellow-800 border-yellow-300"
+      case "high": return "bg-orange-100 text-orange-800 border-orange-300"
+      case "emergency": return "bg-red-100 text-red-800 border-red-300"
+      default: return "bg-gray-100 text-gray-800 border-gray-300"
     }
   }
 
   const getUrgencyIcon = (level: string) => {
     switch (level) {
-      case "low":
-        return "✅"
-      case "medium":
-        return "⚠️"
-      case "high":
-        return "🚨"
-      case "emergency":
-        return "🆘"
-      default:
-        return "ℹ️"
+      case "low": return "✅"
+      case "medium": return "⚠️"
+      case "high": return "🚨"
+      case "emergency": return "🆘"
+      default: return "ℹ️"
     }
   }
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="text-xl text-gray-600">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br from-[#79b473]/5 via-white to-[#41658a]/5 flex items-center justify-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-16 h-16 border-4 border-[#79b473] border-t-transparent rounded-full"
+        />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header */}
-      <div className="bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-2 md:px-4 py-3 md:py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2 md:gap-4">
-            <Link
-              href="/dashboard"
-              className="text-blue-600 hover:text-blue-700 font-medium text-sm md:text-base"
-            >
-              Back
-            </Link>
-            <h1 className="text-lg md:text-2xl font-bold text-gray-800">
-              🩺 Symptom Checker
-            </h1>
-          </div>
-          <button
-            onClick={() => setShowHistory(!showHistory)}
-            className="px-4 py-2 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors"
-          >
-            📋 History ({history.length})
-          </button>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-[#79b473]/5 via-white to-[#41658a]/5">
+      {/* Animated Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          className="absolute top-20 right-20 w-96 h-96 bg-[#79b473]/10 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-20 left-20 w-96 h-96 bg-[#41658a]/10 rounded-full blur-3xl"
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity, delay: 1 }}
+        />
       </div>
 
-      <div className="max-w-7xl mx-auto p-2 md:p-4 flex flex-col md:flex-row gap-4">
-        {/* History Sidebar */}
-        {showHistory && (
-          <div className="w-full md:w-80 bg-white rounded-2xl shadow-lg p-4 overflow-y-auto max-h-64 md:max-h-[calc(100vh-120px)]">
-            <h2 className="text-lg font-bold text-gray-800 mb-4">Previous Checks</h2>
-            {history.length === 0 ? (
-              <p className="text-gray-500 text-sm text-center py-8">No history yet</p>
-            ) : (
-              <div className="space-y-3">
-                {history.map((check) => (
-                  <div
-                    key={check._id}
-                    className="p-3 rounded-lg border bg-gray-50 border-gray-200"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <span className={`text-xs px-2 py-1 rounded-full ${getUrgencyColor(check.analysis.urgencyLevel)}`}>
-                        {getUrgencyIcon(check.analysis.urgencyLevel)} {check.analysis.urgencyLevel.toUpperCase()}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {new Date(check.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-700">
-                      <strong>Symptoms:</strong>
-                      <ul className="ml-4 mt-1 text-xs">
-                        {check.symptoms.slice(0, 3).map((s: any, i: number) => (
-                          <li key={i}>• {s.name}</li>
-                        ))}
-                        {check.symptoms.length > 3 && (
-                          <li className="text-gray-500">+ {check.symptoms.length - 3} more</li>
-                        )}
-                      </ul>
-                    </div>
-                  </div>
-                ))}
+      {/* Header */}
+      <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-[#79b473]/10"
+      >
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link
+                href="/dashboard"
+                className="group flex items-center gap-2 px-4 py-2 bg-white text-[#41658a] rounded-xl hover:shadow-lg transition-all duration-300 font-medium border-2 border-[#41658a]/20"
+              >
+                <FaHome className="group-hover:-translate-x-1 transition-transform" />
+                <span className="hidden md:inline">Dashboard</span>
+              </Link>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#41658a] to-[#414073] rounded-xl flex items-center justify-center shadow-lg">
+                  <FaStethoscope className="text-white text-xl" />
+                </div>
+                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-[#41658a] to-[#414073] bg-clip-text text-transparent">
+                  Symptom Checker
+                </h1>
               </div>
-            )}
+            </div>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowHistory(!showHistory)}
+              className="flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-[#41658a] to-[#414073] text-white rounded-xl hover:shadow-lg transition-all duration-300 font-medium"
+            >
+              <FaHistory />
+              <span className="hidden md:inline">History ({history.length})</span>
+            </motion.button>
           </div>
-        )}
+        </div>
+      </motion.div>
+
+      <div className="relative max-w-7xl mx-auto p-4 md:p-6 flex flex-col md:flex-row gap-4 z-10">
+        {/* History Sidebar */}
+        <AnimatePresence>
+          {showHistory && (
+            <motion.div
+              initial={{ x: -300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -300, opacity: 0 }}
+              transition={{ type: "spring", damping: 25 }}
+              className="w-full md:w-80 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 overflow-y-auto max-h-64 md:max-h-[calc(100vh-120px)] border border-[#79b473]/20"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <FaHistory className="text-[#41658a]" />
+                <h2 className="text-lg font-bold bg-gradient-to-r from-[#41658a] to-[#414073] bg-clip-text text-transparent">Previous Checks</h2>
+              </div>
+              {history.length === 0 ? (
+                <p className="text-gray-500 text-sm text-center py-8">No history yet</p>
+              ) : (
+                <div className="space-y-3">
+                  {history.map((check) => (
+                    <motion.div
+                      key={check._id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-3 rounded-xl border bg-gradient-to-br from-gray-50 to-white border-[#79b473]/20 hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <span className={`text-xs px-2 py-1 rounded-full ${getUrgencyColor(check.analysis.urgencyLevel)}`}>
+                          {getUrgencyIcon(check.analysis.urgencyLevel)} {check.analysis.urgencyLevel.toUpperCase()}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {new Date(check.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="text-sm text-gray-700">
+                        <strong>Symptoms:</strong>
+                        <ul className="ml-4 mt-1 text-xs">
+                          {check.symptoms.slice(0, 3).map((s: any, i: number) => (
+                            <li key={i}>• {s.name}</li>
+                          ))}
+                          {check.symptoms.length > 3 && (
+                            <li className="text-gray-500">+ {check.symptoms.length - 3} more</li>
+                          )}
+                        </ul>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Main Content */}
         <div className="flex-1">
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
             {/* Input Form */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">
-                📝 Enter Your Symptoms
-              </h2>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-[#79b473]/20"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#79b473] to-[#70a37f] rounded-lg flex items-center justify-center">
+                  <FaHeartbeat className="text-white text-sm" />
+                </div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-[#41658a] to-[#414073] bg-clip-text text-transparent">
+                  Enter Your Symptoms
+                </h2>
+              </div>
 
               {/* Disclaimer */}
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
-                <p className="text-xs text-yellow-800">
-                  ⚠️ <strong>Important:</strong> This tool provides general information only and is not a substitute for professional medical advice. Always consult a healthcare provider for diagnosis and treatment.
-                </p>
-              </div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300/50 rounded-xl p-3 mb-4"
+              >
+                <div className="flex items-start gap-2">
+                  <FaExclamationTriangle className="text-yellow-600 mt-0.5 flex-shrink-0" />
+                  <p className="text-xs text-yellow-800">
+                    <strong>Important:</strong> This tool provides general information only and is not a substitute for professional medical advice.
+                  </p>
+                </div>
+              </motion.div>
 
               {/* Symptom Input */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Symptom
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Symptom</label>
                   <input
                     type="text"
                     value={currentSymptom}
                     onChange={(e) => setCurrentSymptom(e.target.value)}
                     placeholder="e.g., Headache, Fever, Cough"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-[#79b473]/30 rounded-xl focus:ring-4 focus:ring-[#79b473]/20 focus:border-[#79b473] outline-none transition-all duration-300 shadow-inner"
                     onKeyPress={(e) => e.key === "Enter" && addSymptom()}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Severity
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Severity</label>
                     <select
                       value={currentSeverity}
                       onChange={(e) => setCurrentSeverity(e.target.value as any)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-[#79b473]/30 rounded-xl focus:ring-4 focus:ring-[#79b473]/20 focus:border-[#79b473] outline-none transition-all duration-300 shadow-inner"
                     >
                       <option value="mild">Mild</option>
                       <option value="moderate">Moderate</option>
@@ -278,58 +314,70 @@ export default function SymptomCheckerPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Duration
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
                     <input
                       type="text"
                       value={currentDuration}
                       onChange={(e) => setCurrentDuration(e.target.value)}
                       placeholder="e.g., 2 days"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-[#79b473]/30 rounded-xl focus:ring-4 focus:ring-[#79b473]/20 focus:border-[#79b473] outline-none transition-all duration-300 shadow-inner"
                       onKeyPress={(e) => e.key === "Enter" && addSymptom()}
                     />
                   </div>
                 </div>
 
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={addSymptom}
                   disabled={!currentSymptom.trim() || !currentDuration.trim()}
-                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-[#79b473] to-[#70a37f] text-white rounded-xl hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                 >
-                  ➕ Add Symptom
-                </button>
+                  <FaPlus /> Add Symptom
+                </motion.button>
               </div>
 
               {/* Added Symptoms */}
-              {symptoms.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">
-                    Added Symptoms ({symptoms.length})
-                  </h3>
-                  <div className="space-y-2">
-                    {symptoms.map((symptom, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-3 bg-blue-50 rounded-lg"
-                      >
-                        <div>
-                          <p className="font-medium text-gray-800">{symptom.name}</p>
-                          <p className="text-xs text-gray-600">
-                            {symptom.severity} • {symptom.duration}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => removeSymptom(index)}
-                          className="text-red-600 hover:text-red-700"
+              <AnimatePresence>
+                {symptoms.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-6"
+                  >
+                    <h3 className="text-sm font-medium text-gray-700 mb-2">
+                      Added Symptoms ({symptoms.length})
+                    </h3>
+                    <div className="space-y-2">
+                      {symptoms.map((symptom, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 20 }}
+                          className="flex items-center justify-between p-3 bg-gradient-to-r from-[#79b473]/10 to-[#70a37f]/10 rounded-xl border border-[#79b473]/20"
                         >
-                          🗑️
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                          <div>
+                            <p className="font-medium text-gray-800">{symptom.name}</p>
+                            <p className="text-xs text-gray-600">
+                              {symptom.severity} • {symptom.duration}
+                            </p>
+                          </div>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => removeSymptom(index)}
+                            className="text-red-600 hover:text-red-700 p-2"
+                          >
+                            <FaTrash />
+                          </motion.button>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* Optional Information */}
               <div className="mt-6 space-y-4">
@@ -345,7 +393,7 @@ export default function SymptomCheckerPage() {
                       value={age}
                       onChange={(e) => setAge(e.target.value)}
                       placeholder="e.g., 30"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                      className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#79b473] focus:border-[#79b473] outline-none text-sm"
                     />
                   </div>
 
@@ -354,7 +402,7 @@ export default function SymptomCheckerPage() {
                     <select
                       value={gender}
                       onChange={(e) => setGender(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                      className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#79b473] focus:border-[#79b473] outline-none text-sm"
                     >
                       <option value="">Select</option>
                       <option value="male">Male</option>
@@ -365,64 +413,99 @@ export default function SymptomCheckerPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs text-gray-600 mb-1">
-                    Additional Information
-                  </label>
+                  <label className="block text-xs text-gray-600 mb-1">Additional Information</label>
                   <textarea
                     value={additionalInfo}
                     onChange={(e) => setAdditionalInfo(e.target.value)}
                     placeholder="Any other relevant information (medications, allergies, etc.)"
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#79b473] focus:border-[#79b473] outline-none text-sm"
                   />
                 </div>
               </div>
 
               {/* Action Buttons */}
               <div className="mt-6 flex gap-3">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={analyzeSymptoms}
                   disabled={symptoms.length === 0 || isAnalyzing}
-                  className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#41658a] to-[#414073] text-white rounded-xl hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                 >
-                  {isAnalyzing ? "🔄 Analyzing..." : "🔍 Analyze Symptoms"}
-                </button>
-                <button
+                  <FaCheckCircle />
+                  {isAnalyzing ? "Analyzing..." : "Analyze Symptoms"}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={resetForm}
-                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-medium"
                 >
-                  🔄 Reset
-                </button>
+                  Reset
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
 
             {/* Analysis Results */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">
-                📊 Analysis Results
-              </h2>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-[#79b473]/20"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#41658a] to-[#414073] rounded-lg flex items-center justify-center">
+                  <FaHospital className="text-white text-sm" />
+                </div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-[#41658a] to-[#414073] bg-clip-text text-transparent">
+                  Analysis Results
+                </h2>
+              </div>
 
               {!analysis && !isAnalyzing && (
-                <div className="flex flex-col items-center justify-center h-64 text-center">
-                  <div className="text-6xl mb-4">🩺</div>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex flex-col items-center justify-center h-64 text-center"
+                >
+                  <motion.div
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="text-6xl mb-4"
+                  >
+                    <FaStethoscope className="text-[#79b473]" />
+                  </motion.div>
                   <p className="text-gray-600">
                     Add your symptoms and click "Analyze" to get AI-powered insights
                   </p>
-                </div>
+                </motion.div>
               )}
 
               {isAnalyzing && (
                 <div className="flex flex-col items-center justify-center h-64">
-                  <div className="text-6xl mb-4 animate-pulse">🔄</div>
-                  <p className="text-gray-600">Analyzing your symptoms...</p>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="w-16 h-16 border-4 border-[#79b473] border-t-transparent rounded-full mb-4"
+                  />
+                  <p className="text-gray-600 font-medium">Analyzing your symptoms...</p>
                   <p className="text-sm text-gray-500 mt-2">This may take a few seconds</p>
                 </div>
               )}
 
               {analysis && (
-                <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="space-y-6"
+                >
                   {/* Urgency Level */}
-                  <div className={`p-4 rounded-lg border-2 ${getUrgencyColor(analysis.urgencyLevel)}`}>
+                  <motion.div
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    className={`p-4 rounded-xl border-2 ${getUrgencyColor(analysis.urgencyLevel)}`}
+                  >
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-2xl">{getUrgencyIcon(analysis.urgencyLevel)}</span>
                       <h3 className="font-bold text-lg">
@@ -430,19 +513,25 @@ export default function SymptomCheckerPage() {
                       </h3>
                     </div>
                     <p className="text-sm">{analysis.whenToSeeDoctor}</p>
-                  </div>
+                  </motion.div>
 
                   {/* Probable Conditions */}
                   <div>
                     <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
-                      🏥 Probable Conditions
+                      <FaHospital className="text-[#41658a]" /> Probable Conditions
                     </h3>
                     <ul className="space-y-2">
                       {analysis.probableConditions.map((condition, index) => (
-                        <li key={index} className="flex items-start gap-2 text-gray-700">
-                          <span className="text-blue-600 mt-1">•</span>
+                        <motion.li
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="flex items-start gap-2 text-gray-700 p-2 bg-gray-50 rounded-lg"
+                        >
+                          <span className="text-[#41658a] mt-1">•</span>
                           <span>{condition}</span>
-                        </li>
+                        </motion.li>
                       ))}
                     </ul>
                   </div>
@@ -450,14 +539,20 @@ export default function SymptomCheckerPage() {
                   {/* Recommendations */}
                   <div>
                     <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
-                      💡 Recommendations
+                      <FaLightbulb className="text-[#79b473]" /> Recommendations
                     </h3>
                     <ul className="space-y-2">
                       {analysis.recommendations.map((rec, index) => (
-                        <li key={index} className="flex items-start gap-2 text-gray-700">
-                          <span className="text-green-600 mt-1">✓</span>
+                        <motion.li
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="flex items-start gap-2 text-gray-700 p-2 bg-green-50 rounded-lg"
+                        >
+                          <FaCheckCircle className="text-green-600 mt-1 flex-shrink-0" />
                           <span>{rec}</span>
-                        </li>
+                        </motion.li>
                       ))}
                     </ul>
                   </div>
@@ -465,37 +560,51 @@ export default function SymptomCheckerPage() {
                   {/* Self-Care Advice */}
                   <div>
                     <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
-                      🏠 Self-Care Tips
+                      <FaHeartbeat className="text-purple-600" /> Self-Care Tips
                     </h3>
                     <ul className="space-y-2">
                       {analysis.selfCareAdvice.map((advice, index) => (
-                        <li key={index} className="flex items-start gap-2 text-gray-700">
+                        <motion.li
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="flex items-start gap-2 text-gray-700 p-2 bg-purple-50 rounded-lg"
+                        >
                           <span className="text-purple-600 mt-1">→</span>
                           <span>{advice}</span>
-                        </li>
+                        </motion.li>
                       ))}
                     </ul>
                   </div>
 
                   {/* Detailed Analysis */}
                   {analysis.detailedAnalysis && (
-                    <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-xl border border-gray-200">
                       <h3 className="font-bold text-gray-800 mb-2">📝 Detailed Analysis</h3>
-                      <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                      <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
                         {analysis.detailedAnalysis}
                       </p>
                     </div>
                   )}
 
                   {/* Disclaimer */}
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <p className="text-xs text-red-800">
-                      <strong>⚠️ Medical Disclaimer:</strong> This analysis is for informational purposes only and should not be considered medical advice. Always consult with a qualified healthcare professional for proper diagnosis and treatment.
-                    </p>
-                  </div>
-                </div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-200 rounded-xl p-3"
+                  >
+                    <div className="flex items-start gap-2">
+                      <FaExclamationTriangle className="text-red-600 mt-0.5 flex-shrink-0" />
+                      <p className="text-xs text-red-800">
+                        <strong>Medical Disclaimer:</strong> This analysis is for informational purposes only and should not be considered medical advice. Always consult with a qualified healthcare professional for proper diagnosis and treatment.
+                      </p>
+                    </div>
+                  </motion.div>
+                </motion.div>
               )}
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

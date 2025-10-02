@@ -520,125 +520,194 @@ export default function ChatPage() {
               </div>
             </motion.div>
           ) : (
-            <AnimatePresence>
-              {messages.map((message, index) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className={`flex ${
-                    message.role === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-2xl px-5 py-4 shadow-lg ${
-                      message.role === "user"
-                        ? "bg-gradient-to-br from-[#79b473] to-[#70a37f] text-white rounded-tr-sm"
-                        : "bg-white border-2 border-[#41658a]/20 text-gray-800 rounded-tl-sm"
+            <>
+              <AnimatePresence mode="popLayout">
+                {messages.map((message, index) => (
+                  <motion.div
+                    key={message.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    className={`flex ${
+                      message.role === "user" ? "justify-end" : "justify-start"
                     }`}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    <div
+                      className={`max-w-[80%] rounded-2xl px-5 py-4 shadow-lg ${
                         message.role === "user"
-                          ? "bg-white/20"
-                          : "bg-gradient-to-br from-[#41658a] to-[#414073]"
-                      }`}>
-                        {message.role === "user" ? (
-                          <FaUser className="text-white text-sm" />
-                        ) : (
+                          ? "bg-gradient-to-br from-[#79b473] to-[#70a37f] text-white rounded-tr-sm"
+                          : "bg-white border-2 border-[#41658a]/20 text-gray-800 rounded-tl-sm"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                          message.role === "user"
+                            ? "bg-white/20"
+                            : "bg-gradient-to-br from-[#41658a] to-[#414073]"
+                        }`}>
+                          {message.role === "user" ? (
+                            <FaUser className="text-white text-sm" />
+                          ) : (
+                            <FaRobot className="text-white text-sm" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                          <p
+                            className={`text-xs mt-2 ${
+                              message.role === "user"
+                                ? "text-white/70"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            {new Date(message.timestamp).toLocaleTimeString()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+                {isLoading && (
+                  <motion.div
+                    key="loading-indicator"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="flex justify-start"
+                  >
+                    <div className="bg-white border-2 border-[#41658a]/20 rounded-2xl rounded-tl-sm px-5 py-4 shadow-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#41658a] to-[#414073] flex items-center justify-center">
                           <FaRobot className="text-white text-sm" />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
-                        <p
-                          className={`text-xs mt-2 ${
-                            message.role === "user"
-                              ? "text-white/70"
-                              : "text-gray-500"
-                          }`}
-                        >
-                          {new Date(message.timestamp).toLocaleTimeString()}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-              {isLoading && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex justify-start"
-                >
-                  <div className="bg-white border-2 border-[#41658a]/20 rounded-2xl rounded-tl-sm px-5 py-4 shadow-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#41658a] to-[#414073] flex items-center justify-center">
-                        <FaRobot className="text-white text-sm" />
-                      </div>
-                      <div className="flex gap-1">
-                        <motion.div
-                          animate={{ y: [0, -8, 0] }}
-                          transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
-                          className="w-2 h-2 bg-[#79b473] rounded-full"
-                        />
-                        <motion.div
-                          animate={{ y: [0, -8, 0] }}
-                          transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
-                          className="w-2 h-2 bg-[#70a37f] rounded-full"
-                        />
-                        <motion.div
-                          animate={{ y: [0, -8, 0] }}
-                          transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
-                          className="w-2 h-2 bg-[#41658a] rounded-full"
-                        />
+                        </div>
+                        <div className="flex gap-1">
+                          <motion.div
+                            animate={{ y: [0, -8, 0] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                            className="w-2 h-2 bg-[#79b473] rounded-full"
+                          />
+                          <motion.div
+                            animate={{ y: [0, -8, 0] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                            className="w-2 h-2 bg-[#70a37f] rounded-full"
+                          />
+                          <motion.div
+                            animate={{ y: [0, -8, 0] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                            className="w-2 h-2 bg-[#41658a] rounded-full"
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <div ref={messagesEndRef} />
-            </AnimatePresence>
+            </>
           )}
         </div>
 
-        {/* Input Area */}
-        <div className="bg-white rounded-b-2xl shadow-lg p-3 md:p-4 border-t">
-          <form onSubmit={handleSendMessage} className="flex gap-2">
-            <button
+        {/* Input Area - Redesigned */}
+        <motion.div 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="bg-white/95 backdrop-blur-md rounded-b-3xl shadow-2xl p-4 md:p-6 border-t-2 border-[#79b473]/20"
+        >
+          <form onSubmit={handleSendMessage} className="flex items-center gap-3 md:gap-4">
+            {/* Voice Input Button */}
+            <motion.button
               type="button"
               onClick={toggleVoiceInput}
-              className={`px-3 md:px-4 py-3 rounded-lg transition-colors ${
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`relative flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl transition-all duration-300 shadow-lg ${
                 isListening
-                  ? "bg-red-500 hover:bg-red-600 text-white animate-pulse"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                  ? "bg-gradient-to-br from-red-500 to-red-600 text-white shadow-red-500/50"
+                  : "bg-gradient-to-br from-[#79b473] to-[#70a37f] text-white hover:shadow-[#79b473]/50"
               }`}
-              title="Voice input"
+              title={isListening ? "Stop recording" : "Start voice input"}
             >
-              {isListening ? "🎙️" : "🎤"}
-            </button>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your question..."
-              className="flex-1 px-3 md:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm md:text-base"
-              disabled={isLoading}
-            />
-            <button
+              <FaMicrophone className={`text-xl md:text-2xl ${isListening ? "animate-pulse" : ""}`} />
+              {isListening && (
+                <motion.div
+                  className="absolute inset-0 rounded-2xl border-2 border-red-400"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.8, 0, 0.8] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
+              )}
+            </motion.button>
+
+            {/* Text Input */}
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask me anything about your health..."
+                className="w-full px-5 md:px-6 py-3.5 md:py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-[#79b473]/30 rounded-2xl focus:ring-4 focus:ring-[#79b473]/20 focus:border-[#79b473] outline-none text-sm md:text-base text-gray-800 placeholder-gray-500 transition-all duration-300 shadow-inner"
+                disabled={isLoading}
+              />
+              {isLoading && (
+                <motion.div
+                  className="absolute right-4 top-1/2 -translate-y-1/2"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                >
+                  <div className="w-5 h-5 border-3 border-[#79b473] border-t-transparent rounded-full" />
+                </motion.div>
+              )}
+            </div>
+
+            {/* Send Button */}
+            <motion.button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="px-4 md:px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm md:text-base"
+              whileHover={{ scale: input.trim() && !isLoading ? 1.05 : 1 }}
+              whileTap={{ scale: input.trim() && !isLoading ? 0.95 : 1 }}
+              className={`relative flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl font-semibold text-sm md:text-base transition-all duration-300 shadow-lg overflow-hidden ${
+                isLoading || !input.trim()
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
+                  : "bg-gradient-to-br from-[#41658a] to-[#414073] text-white hover:shadow-[#41658a]/50"
+              }`}
             >
-              {isLoading ? "..." : "Send"}
-            </button>
+              {isLoading ? (
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                >
+                  <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ x: 0 }}
+                  whileHover={{ x: 3 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <FaPaperPlane className="text-xl md:text-2xl" />
+                </motion.div>
+              )}
+              {!isLoading && input.trim() && (
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  animate={{ x: ["-100%", "100%"] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                />
+              )}
+            </motion.button>
           </form>
-          <p className="text-xs text-gray-500 mt-2 text-center hidden md:block">
-            💡 This AI assistant provides general health information. Always consult a healthcare professional for medical advice.
-          </p>
-        </div>
+
+          {/* Helper Text */}
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-xs text-gray-500 mt-3 md:mt-4 text-center flex items-center justify-center gap-2"
+          >
+            <span className="hidden md:inline">💡</span>
+            <span>This AI assistant provides general health information. Always consult a healthcare professional for medical advice.</span>
+          </motion.p>
+        </motion.div>
         </div>
       </div>
     </div>
