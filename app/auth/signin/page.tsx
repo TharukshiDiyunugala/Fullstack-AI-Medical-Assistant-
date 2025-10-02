@@ -2,10 +2,10 @@
 
 import { signIn } from "next-auth/react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import Link from "next/link"
 
-export default function SignInPage() {
+function SignInForm() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
@@ -174,5 +174,17 @@ export default function SignInPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-xl text-gray-600">Loading...</div>
+      </div>
+    }>
+      <SignInForm />
+    </Suspense>
   )
 }
