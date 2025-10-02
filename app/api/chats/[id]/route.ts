@@ -6,7 +6,7 @@ import Chat from "@/models/Chat"
 // GET a specific chat
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth()
@@ -16,8 +16,10 @@ export async function GET(
 
     await connectDB()
 
+    const { id } = await params
+
     const chat = await Chat.findOne({
-      _id: params.id,
+      _id: id,
       userId: session.user.email,
     })
 
@@ -38,7 +40,7 @@ export async function GET(
 // DELETE a specific chat
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth()
@@ -48,8 +50,10 @@ export async function DELETE(
 
     await connectDB()
 
+    const { id } = await params
+
     const chat = await Chat.findOneAndDelete({
-      _id: params.id,
+      _id: id,
       userId: session.user.email,
     })
 
