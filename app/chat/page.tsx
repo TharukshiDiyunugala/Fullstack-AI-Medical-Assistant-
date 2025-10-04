@@ -346,59 +346,63 @@ export default function ChatPage() {
         animate={{ y: 0, opacity: 1 }}
         className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-[#79b473]/10"
       >
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-3 md:px-6 py-3 md:py-4">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto">
               <Link
                 href="/dashboard"
-                className="group flex items-center gap-2 px-4 py-2 bg-white text-[#41658a] rounded-xl hover:shadow-lg transition-all duration-300 font-medium border-2 border-[#41658a]/20"
+                className="group flex items-center gap-2 px-3 md:px-4 py-2 bg-white text-[#41658a] rounded-xl hover:shadow-lg transition-all duration-300 font-medium border-2 border-[#41658a]/20"
               >
                 <FaHome className="group-hover:-translate-x-1 transition-transform" />
-                <span className="hidden md:inline">Dashboard</span>
+                <span className="hidden sm:inline">Dashboard</span>
               </Link>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#79b473] to-[#70a37f] rounded-xl flex items-center justify-center shadow-lg">
-                  <FaRobot className="text-white text-xl" />
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#79b473] to-[#70a37f] rounded-xl flex items-center justify-center shadow-lg">
+                  <FaRobot className="text-white text-lg md:text-xl" />
                 </div>
-                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-[#41658a] to-[#414073] bg-clip-text text-transparent">
+                <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-[#41658a] to-[#414073] bg-clip-text text-transparent">
                   AI Health Assistant
                 </h1>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap w-full md:w-auto">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowHistory(!showHistory)}
-                className="flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-[#41658a] to-[#414073] text-white rounded-xl hover:shadow-lg transition-all duration-300 font-medium"
+                className="flex items-center gap-2 px-3 md:px-4 py-2 text-xs md:text-sm bg-gradient-to-r from-[#41658a] to-[#414073] text-white rounded-xl hover:shadow-lg transition-all duration-300 font-medium"
               >
                 <FaHistory />
-                <span className="hidden md:inline">History ({chatHistory.length})</span>
+                <span className="hidden sm:inline">History ({chatHistory.length})</span>
+                <span className="sm:hidden">({chatHistory.length})</span>
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={startNewChat}
-                className="flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-[#79b473] to-[#70a37f] text-white rounded-xl hover:shadow-lg transition-all duration-300 font-medium"
+                className="flex items-center gap-2 px-3 md:px-4 py-2 text-xs md:text-sm bg-gradient-to-r from-[#79b473] to-[#70a37f] text-white rounded-xl hover:shadow-lg transition-all duration-300 font-medium"
               >
                 <FaPlus />
-                <span className="hidden md:inline">New Chat</span>
+                <span className="hidden sm:inline">New</span>
               </motion.button>
-            <button
-              onClick={clearChat}
-              className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
-            >
-              🗑️ Clear
-            </button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={clearChat}
+                className="flex items-center gap-2 px-3 md:px-4 py-2 text-xs md:text-sm bg-white text-gray-700 border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:shadow-lg transition-all duration-300 font-medium"
+              >
+                <FaTrash />
+                <span className="hidden sm:inline">Clear</span>
+              </motion.button>
               {chatHistory.length > 0 && (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={clearAllChats}
-                  className="flex items-center gap-2 px-4 py-2 text-sm bg-white text-red-600 border-2 border-red-200 rounded-xl hover:bg-red-50 hover:shadow-lg transition-all duration-300 font-medium"
+                  className="flex items-center gap-2 px-3 md:px-4 py-2 text-xs md:text-sm bg-white text-red-600 border-2 border-red-200 rounded-xl hover:bg-red-50 hover:shadow-lg transition-all duration-300 font-medium"
                 >
                   <FaTrash />
-                  <span className="hidden md:inline">Clear All</span>
+                  <span className="hidden sm:inline">Clear All</span>
                 </motion.button>
               )}
             </div>
@@ -406,7 +410,7 @@ export default function ChatPage() {
         </div>
       </motion.div>
 
-      <div className="relative max-w-7xl mx-auto p-4 md:p-6 h-[calc(100vh-100px)] flex flex-col md:flex-row gap-4 z-10">
+      <div className="relative max-w-7xl mx-auto p-3 md:p-6 h-[calc(100vh-120px)] md:h-[calc(100vh-100px)] flex flex-col md:flex-row gap-4 z-10">
         {/* History Sidebar */}
         <AnimatePresence>
           {showHistory && (
@@ -415,7 +419,7 @@ export default function ChatPage() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -300, opacity: 0 }}
               transition={{ type: "spring", damping: 25 }}
-              className="w-full md:w-80 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 overflow-y-auto max-h-[calc(100vh-120px)] border border-[#79b473]/20"
+              className="w-full md:w-80 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 overflow-y-auto max-h-[calc(100vh-200px)] md:max-h-[calc(100vh-120px)] border border-[#79b473]/20"
             >
               <div className="flex items-center gap-2 mb-4">
                 <FaHistory className="text-[#41658a]" />
@@ -534,14 +538,14 @@ export default function ChatPage() {
                     }`}
                   >
                     <div
-                      className={`max-w-[80%] rounded-2xl px-5 py-4 shadow-lg ${
+                      className={`max-w-[85%] md:max-w-[80%] rounded-2xl px-4 md:px-5 py-3 md:py-4 shadow-lg ${
                         message.role === "user"
                           ? "bg-gradient-to-br from-[#79b473] to-[#70a37f] text-white rounded-tr-sm"
                           : "bg-white border-2 border-[#41658a]/20 text-gray-800 rounded-tl-sm"
                       }`}
                     >
-                      <div className="flex items-start gap-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      <div className="flex items-start gap-2 md:gap-3">
+                        <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center ${
                           message.role === "user"
                             ? "bg-white/20"
                             : "bg-gradient-to-br from-[#41658a] to-[#414073]"
@@ -553,9 +557,9 @@ export default function ChatPage() {
                           )}
                         </div>
                         <div className="flex-1">
-                          <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                          <p className="whitespace-pre-wrap leading-relaxed text-sm md:text-base">{message.content}</p>
                           <p
-                            className={`text-xs mt-2 ${
+                            className={`text-xs mt-1 md:mt-2 ${
                               message.role === "user"
                                 ? "text-white/70"
                                 : "text-gray-500"
@@ -612,23 +616,23 @@ export default function ChatPage() {
         <motion.div 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-white/95 backdrop-blur-md rounded-b-3xl shadow-2xl p-4 md:p-6 border-t-2 border-[#79b473]/20"
+          className="bg-white/95 backdrop-blur-md rounded-b-3xl shadow-2xl p-3 md:p-6 border-t-2 border-[#79b473]/20"
         >
-          <form onSubmit={handleSendMessage} className="flex items-center gap-3 md:gap-4">
+          <form onSubmit={handleSendMessage} className="flex items-center gap-2 md:gap-4">
             {/* Voice Input Button */}
             <motion.button
               type="button"
               onClick={toggleVoiceInput}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className={`relative flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl transition-all duration-300 shadow-lg ${
+              className={`relative flex items-center justify-center w-11 h-11 md:w-14 md:h-14 rounded-2xl transition-all duration-300 shadow-lg ${
                 isListening
                   ? "bg-gradient-to-br from-red-500 to-red-600 text-white shadow-red-500/50"
                   : "bg-gradient-to-br from-[#79b473] to-[#70a37f] text-white hover:shadow-[#79b473]/50"
               }`}
               title={isListening ? "Stop recording" : "Start voice input"}
             >
-              <FaMicrophone className={`text-xl md:text-2xl ${isListening ? "animate-pulse" : ""}`} />
+              <FaMicrophone className={`text-lg md:text-2xl ${isListening ? "animate-pulse" : ""}`} />
               {isListening && (
                 <motion.div
                   className="absolute inset-0 rounded-2xl border-2 border-red-400"
@@ -644,8 +648,8 @@ export default function ChatPage() {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask me anything about your health..."
-                className="w-full px-5 md:px-6 py-3.5 md:py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-[#79b473]/30 rounded-2xl focus:ring-4 focus:ring-[#79b473]/20 focus:border-[#79b473] outline-none text-sm md:text-base text-gray-800 placeholder-gray-500 transition-all duration-300 shadow-inner"
+                placeholder="Ask about your health..."
+                className="w-full px-3 md:px-6 py-3 md:py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-[#79b473]/30 rounded-2xl focus:ring-4 focus:ring-[#79b473]/20 focus:border-[#79b473] outline-none text-sm md:text-base text-gray-800 placeholder-gray-500 transition-all duration-300 shadow-inner"
                 disabled={isLoading}
               />
               {isLoading && (
@@ -665,7 +669,7 @@ export default function ChatPage() {
               disabled={isLoading || !input.trim()}
               whileHover={{ scale: input.trim() && !isLoading ? 1.05 : 1 }}
               whileTap={{ scale: input.trim() && !isLoading ? 0.95 : 1 }}
-              className={`relative flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl font-semibold text-sm md:text-base transition-all duration-300 shadow-lg overflow-hidden ${
+              className={`relative flex items-center justify-center w-11 h-11 md:w-14 md:h-14 rounded-2xl font-semibold text-sm md:text-base transition-all duration-300 shadow-lg overflow-hidden ${
                 isLoading || !input.trim()
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
                   : "bg-gradient-to-br from-[#41658a] to-[#414073] text-white hover:shadow-[#41658a]/50"
@@ -684,7 +688,7 @@ export default function ChatPage() {
                   whileHover={{ x: 3 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <FaPaperPlane className="text-xl md:text-2xl" />
+                  <FaPaperPlane className="text-lg md:text-2xl" />
                 </motion.div>
               )}
               {!isLoading && input.trim() && (
@@ -702,10 +706,10 @@ export default function ChatPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-xs text-gray-500 mt-3 md:mt-4 text-center flex items-center justify-center gap-2"
+            className="text-xs text-gray-500 mt-2 md:mt-4 text-center flex items-center justify-center gap-2 px-2"
           >
             <span className="hidden md:inline">💡</span>
-            <span>This AI assistant provides general health information. Always consult a healthcare professional for medical advice.</span>
+            <span className="text-center">This AI assistant provides general health information. Always consult a healthcare professional for medical advice.</span>
           </motion.p>
         </motion.div>
         </div>
